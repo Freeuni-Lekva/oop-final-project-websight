@@ -202,5 +202,12 @@ public class DBConnection {
         return rs;
     }
 
+    public ResultSet getQuizAnswer(int questionId) throws SQLException {
+        String select = "SELECT * FROM " + answers_table + " WHERE questionID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, questionId);
+        return sql.executeQuery();
+    }
+
 
 }
