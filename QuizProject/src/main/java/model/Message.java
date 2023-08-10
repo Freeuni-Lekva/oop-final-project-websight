@@ -76,7 +76,7 @@ public class Message implements Comparable<Message> {
         return date;
     }
 
-    public boolean setReadStatus() {
+    public boolean getReadStatus() {
         return read;
     }
 
@@ -84,7 +84,7 @@ public class Message implements Comparable<Message> {
         this.subject = subject;
     }
 
-    public void addContent(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
