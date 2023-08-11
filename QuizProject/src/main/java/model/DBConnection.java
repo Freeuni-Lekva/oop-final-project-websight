@@ -203,4 +203,25 @@ public class DBConnection {
     }
 
 
+    public int addQuiz(Quiz quiz) throws SQLException {
+
+        ResultSet genKey = null;
+        String insert = "INSERT INTO" + quizzes_table +
+                "(quizz_id, title, description, author_id, creation_time, is_random, is_one_page, is_immediate_correction)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement stm = connection.prepareStatement(insert);
+        stm.setInt(1, quiz.getQuizId());
+        stm.setString(2, quiz.getTitle());
+        stm.setString(3, quiz.getDescription());
+        stm.setInt(4, quiz.getAuthorId());
+        stm.setDate(5, new java.sql.Date(quiz.getCreationDate().getTime()));
+        stm.setBoolean(6, quiz.isRandomOrderQuestions());
+        stm.setBoolean(7, quiz.isOnePage());
+        stm.setBoolean(8, quiz.isImmediateCorrection());
+
+         stm.executeUpdate();
+
+        return 0;
+    }
+
 }
