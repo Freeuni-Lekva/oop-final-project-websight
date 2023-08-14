@@ -219,7 +219,7 @@ public class DBConnection {
         stm.setBoolean(7, quiz.isOnePage());
         stm.setBoolean(8, quiz.isImmediateCorrection());
 
-         stm.executeUpdate();
+        stm.executeUpdate();
 
         return 0;
     }

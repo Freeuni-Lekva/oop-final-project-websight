@@ -83,6 +83,10 @@ public class Quiz {
         return isImmediateCorrection;
     }
 
+    public void addQuestionToQuizz(Question question){
+        questions.add(question);
+    }
+
     public void setQuizId(int quizId) {
         this.quizId = quizId;
     }
