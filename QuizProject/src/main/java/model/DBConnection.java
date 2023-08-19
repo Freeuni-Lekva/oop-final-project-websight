@@ -209,5 +209,22 @@ public class DBConnection {
         return sql.executeQuery();
     }
 
+    public boolean addMessage(Message message) throws SQLException {
+        String set = "INSERT INTO " + messages_table +
+                "(messageType, toUserID, fromUserID, subject, content, date," +
+                " messageRead, toUserDeleted, fromUserDeleted)" +
+                " VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+        PreparedStatement sql = connection.prepareStatement(set);
 
+        sql.setInt(1, message.getType());
+        sql.setInt(2, message.getToUserID());
+        sql.setInt(3, message.getFromUserID());
+        sql.setString(4, message.getSubject());
+        sql.setString(5, message.getContent());
+        sql.setTimestamp(6, new java.sql.Timestamp(message.getDate().getTime()));
+        sql.setBoolean(7, message.getReadStatus());
+        sql.setBoolean(8, false);
+        sql.setBoolean(9, false);
+        return sql.execute();
+    }
 }
