@@ -7,8 +7,7 @@ public class Quiz {
     private static final int FILL_BLANK = 2;
     private static final int MULTIPLE_CHOICE = 3;
     private static final int PICTURE_RESPONSE = 4;
-
-    private int quizId;
+    private  int quizId;
     private int authorId;
     private String title;
     private String description;
@@ -18,6 +17,9 @@ public class Quiz {
     private boolean isOnePage;
     private boolean isImmediateCorrection;
     private ArrayList<Question> questions;
+    private ArrayList<Answer> answers;
+    public Quiz() {
+    }
 
     public Quiz(int quizId, int creatorId, String title, String description, Date creationDate, boolean isRandom, boolean isOnePage, boolean isImmediateCorrection, ArrayList<Question> questions) {
         this.quizId = quizId;
@@ -31,7 +33,7 @@ public class Quiz {
         this.questions = questions;
     }
 
-    ArrayList<Question> getQuestions(){
+    public ArrayList<Question> getQuestions(){
         ArrayList<Question> result = new ArrayList<Question>();
         Set<Integer> usedIndex = new HashSet<Integer>();
         if (isRandomOrderQuestions){
@@ -41,6 +43,7 @@ public class Quiz {
                 if(!usedIndex.contains(randomIndex)){
                     usedIndex.add(randomIndex);
                     result.add(questions.get(randomIndex));
+
                 }
             }
         } else {
@@ -51,11 +54,11 @@ public class Quiz {
         return result;
     }
 
-    public int getQuizId() {
+    public int getQuizID() {
         return quizId;
     }
 
-    public int getAuthorId() {
+    public int getAuthorID() {
         return authorId;
     }
 
@@ -87,11 +90,13 @@ public class Quiz {
         questions.add(question);
     }
 
-    public void setQuizId(int quizId) {
+
+
+    public void setQuizID(int quizId) {
         this.quizId = quizId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorID(int authorId) {
         this.authorId = authorId;
     }
 
@@ -123,3 +128,4 @@ public class Quiz {
         this.questions = questions;
     }
 }
+

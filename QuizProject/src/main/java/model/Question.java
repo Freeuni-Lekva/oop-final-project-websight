@@ -1,15 +1,11 @@
-package model.Question;
+package model;
 
-import model.Answer;
-import model.DBConnection;
-
-import java.sql.*;
 import java.util.*;
 
 public class Question{
-    private int questionId;
+    private int questionID;
     private int questionType;
-    private int quizId;
+    private int quizID;
     String questionText;
     ArrayList<Answer> probableAnswers; //
     Answer correctAnswer;
@@ -17,10 +13,10 @@ public class Question{
     public Question(){
     }
     public Question(int questionId, String questionText, int Type, int quizId, ArrayList<Answer> probableAnswers, Answer correctAnswer){
-        this.questionId = questionId;
+        this.questionID = questionId;
         this.questionText = questionText;
         this.questionType = Type;
-        this.quizId = quizId;
+        this.quizID = quizId;
         this.probableAnswers = probableAnswers;
         this.correctAnswer = correctAnswer;
     }
@@ -31,28 +27,28 @@ public class Question{
 
     public String showQuestionText() {return "<h5>" + questionText + "</h5>";}
 
-    public int getQuestionId() {
-        return questionId;
+    public int getQuestionID() {
+        return questionID;
     }
 
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
+    public void setQuestionID(int questionID) {
+        this.questionID = questionID;
     }
 
     public int getQuestionType() {
         return questionType;
     }
 
-    public void setQuestionType(int questionType) {
+    public void setQuestionType(int questionType){
         this.questionType = questionType;
     }
 
-    public int getQuizId() {
-        return quizId;
+    public int getQuizID() {
+        return quizID;
     }
 
-    public void setQuizId(int quizId) {
-        this.quizId = quizId;
+    public void setQuizID(int quizID) {
+        this.quizID = quizID;
     }
 
     public String getQuestionText() {
@@ -84,11 +80,11 @@ public class Question{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question = (Question) o;
-        return questionId == question.questionId && questionType == question.questionType && quizId == question.quizId && Objects.equals(questionText, question.questionText) && Objects.equals(probableAnswers, question.probableAnswers) && Objects.equals(correctAnswer, question.correctAnswer);
+        return questionID == question.questionID && questionType == question.questionType && quizID == question.quizID && Objects.equals(questionText, question.questionText) && Objects.equals(probableAnswers, question.probableAnswers) && Objects.equals(correctAnswer, question.correctAnswer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(questionId, questionType, quizId, questionText, probableAnswers, correctAnswer);
+        return Objects.hash(questionID, questionType, quizID, questionText, probableAnswers, correctAnswer);
     }
 }
