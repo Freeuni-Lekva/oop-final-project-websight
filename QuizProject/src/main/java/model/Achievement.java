@@ -23,5 +23,14 @@ public class Achievement {
         }
         return result;
     }
+
+    public static ArrayList<String> getAchievementNames(int userID, DBConnection connection) throws SQLException {
+        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<Integer> IDs = getAchievements(userID, connection);
+        for (int i = 0; i < IDs.size(); i++) {
+            result.add(achievementNames[IDs.get(i)]);
+        }
+        return result;
+    }
 }
 
