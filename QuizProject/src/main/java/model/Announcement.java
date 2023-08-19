@@ -36,4 +36,25 @@ public class Announcement extends Message {
 
         return count;
     }
+
+    public static String getCreationHTML(Integer userID) {
+        StringBuilder html = new StringBuilder();
+
+        html.append("<input name='fromUserID' type='hidden' value=" + userID + " />");
+        html.append("<input name='type' type='hidden' value=" + Message.ANNOUNCEMENT + " />");
+        html.append("<input name='hasContent' type='hidden' value='true' />");
+
+        html.append(
+                "<div class='row'><br>" +
+                        "<div class='form-group'>" +
+                        "<label for='1' class='col-sm-2 control-label'>Announcement</label>" +
+                        "<div class='col-sm-7'>" +
+                        "<textarea class='form-control' id='1' name='content' " +
+                        "placeholder='Announcement' rows='5'></textarea>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>"
+        );
+        return html.toString();
+    }
 }
