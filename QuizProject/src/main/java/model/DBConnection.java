@@ -227,4 +227,21 @@ public class DBConnection {
         sql.setBoolean(9, false);
         return sql.execute();
     }
+    public boolean validQuizName(String quizName) throws SQLException {
+        String quizNameGet = "SELECT COUNT(*) FROM " + quizzes_table + " WHERE quizName = ?";
+        PreparedStatement sql = connection.prepareStatement(quizNameGet);
+        sql.setString(1, quizName);
+        ResultSet rs = sql.executeQuery();
+        rs.first();
+        return rs.getInt(1) > 0;
+    }
+
+    public int getQuizID(String quizName) throws SQLException {
+        String userIDGet = "SELECT quizID FROM " + quizzes_table + " WHERE quizName = ?";
+        PreparedStatement sql = connection.prepareStatement(userIDGet);
+        sql.setString(1, quizName);
+        ResultSet rs = sql.executeQuery();
+        rs.first();
+        return rs.getInt(1);
+    }
 }
