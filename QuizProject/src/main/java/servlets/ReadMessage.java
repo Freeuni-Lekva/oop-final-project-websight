@@ -57,6 +57,7 @@ public class ReadMessage extends HttpServlet {
             req.getRequestDispatcher("error.jsp").forward(req, res);
         }
     }
+
     protected void doPost(HttpServletRequest req, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(req, response);
