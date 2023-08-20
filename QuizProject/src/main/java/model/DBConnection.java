@@ -2,6 +2,8 @@ package model;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DBConnection {
 
@@ -535,4 +537,115 @@ public class DBConnection {
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return genKey.getInt(1);
     }
+    public boolean toUserDeleteMessage(Integer messageID) throws SQLException {
+        String update = "UPDATE " + messages_table+ " SET toUserDeleted = ? " +
+                "WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+    public boolean fromUserDeleteMessage(Integer messageID) throws SQLException {
+        String update = "UPDATE " + messages_table + " SET fromUserDeleted = ? " +
+                "WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+
+    public String getQuizName(int quizID) throws SQLException {
+        String userIDGet = "SELECT quizName FROM " + quizzes_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(userIDGet);
+        sql.setInt(1, quizID);
+        ResultSet rs = sql.executeQuery();
+        rs.first();
+        return rs.getString(1);
+    }
+    public ResultSet searchForQuiz(String quizFilter, String tagFilter, String catFilter) throws SQLException {
+        String tagAddOn = "";
+        String catAddOn = "";
+        if (tagFilter == null || tagFilter.equals("")) {
+            tagFilter = "%";
+            tagAddOn = "or b.tagID is null ";
+        } //if
+        if (catFilter == null || catFilter.equals("")) {
+            catFilter = "%";
+            catAddOn = "or c.categoryID is null ";
+        } //if
+        if (quizFilter == null || quizFilter.equals("")) {
+            quizFilter = "%";
+        } //if
+        else {
+            quizFilter = "%" + quizFilter + "%";
+        } //else
+
+        String select = "SELECT * FROM " + quizzes_table + " a LEFT JOIN " + quiz_tags_table + " b"
+                + " ON a.quizID = b.quizID LEFT JOIN " + quiz_categories_table + " c ON a.quizID = c.quizID "
+                + " WHERE ( a.quizName like ? ) AND (b.tagID like ? " + tagAddOn + " ) AND ( c.categoryID like ? "
+                + catAddOn + " );";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setString(1, quizFilter);
+        sql.setString(2, tagFilter);
+        sql.setString(3, catFilter);
+        return sql.executeQuery();
+    }
+    public ResultSet getAllQuizzes() throws SQLException {
+        String select = "SELECT * FROM " + quizzes_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+    public ArrayList<Message> getRecentMessages(int userID) throws SQLException{
+        ResultSet rs = getUserMessages(userID);
+        Set<Integer> validTypes = new HashSet<Integer>() {
+            private static final long serialVersionUID = -5488924326330841157L;
+            {
+                add(Message.NOTE);
+                add(Message.CHALLENGE);
+                add(Message.FRIEND);
+            }};
+        ArrayList<Message> messages = Message.loadMessages(rs, validTypes, userID, null);
+        ArrayList<Message> recent = new ArrayList<Message>();
+        ArrayList<Message> result = new ArrayList<Message>();
+        for (int i = 0; i < messages.size(); i++) {
+            int recentIndex = 0;
+            while(recentIndex < recent.size() &&
+                    recent.get(recentIndex).getDate().compareTo(messages.get(i).getDate()) > 0) {
+                recentIndex++;
+            }
+            recent.add(recentIndex , messages.get(i));
+        }
+        for (int i = 0; i < recent.size(); i++) {
+            if (i >= 3) break;
+            result.add(recent.get(i));
+        }
+        return result;
+    }
+
+    public ResultSet getAnswerInfo(int questionId) throws SQLException {
+        String select = "SELECT * FROM "  + answers_table + " WHERE questionID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, questionId);
+        return sql.executeQuery();
+    }
+    public boolean addCat(int quizID, int catID) throws SQLException {
+        String insert = "insert into " + quiz_categories_table + " (quizID, categoryID) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, quizID);
+        sql.setInt(2, catID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        ResultSet genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating achievement failed, no gen key obtained.");
+        return true;
+    }
+
 }
