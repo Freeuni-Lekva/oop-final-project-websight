@@ -265,17 +265,17 @@ public class DBConnection {
     public int addQuestionToDB(String questionText, int qType,
                            int nextQuestionNum, int quizID) throws SQLException {
         String insert = "insert into " + questions_table + " (quizID, questionTypeID, question, questionNumber) VALUES (?, ?, ?, ?);";
-        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-        sql.setInt(1, quizID);
-        sql.setInt(2, qType);
-        sql.setString(3, questionText);
-        sql.setInt(4, nextQuestionNum);
-        int affectedRows = sql.executeUpdate();
+        PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, quizID);
+        statement.setInt(2, qType);
+        statement.setString(3, questionText);
+        statement.setInt(4, nextQuestionNum);
+        int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
             throw new SQLException("Adding question failed, no rows affected.");
         }
 
-        ResultSet genKey = sql.getGeneratedKeys();
+        ResultSet genKey = statement.getGeneratedKeys();
         if (!genKey.first())
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
@@ -283,15 +283,15 @@ public class DBConnection {
     public int addAnswerToDB(String answerText, int quizID, int questionID) throws SQLException {
         ResultSet genKey = null;
         String insert = "insert into " + answers_table + " (questionID, quizID, answer) VALUES (?, ?, ?);";
-        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-        sql.setInt(1, questionID);
-        sql.setInt(2, quizID);
-        sql.setString(3, answerText);
-        int affectedRows = sql.executeUpdate();
+        PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, questionID);
+        statement.setInt(2, quizID);
+        statement.setString(3, answerText);
+        int affectedRows = statement.executeUpdate();
         if (affectedRows == 0)
             throw new SQLException("Adding answer failed, no rows affected.");
 
-        genKey = sql.getGeneratedKeys();
+        genKey = statement.getGeneratedKeys();
         if (!genKey.first())
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
