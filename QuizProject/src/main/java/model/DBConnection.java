@@ -393,4 +393,23 @@ public class DBConnection {
         return rs.getString(1);
     }
 
+    public boolean deleteMessage(Integer messageID) throws SQLException {
+        String delete = "DELETE FROM " + messages_table + " WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(delete);
+        sql.setInt(1, messageID);
+
+        return sql.execute();
+    }
+    public boolean readMessage (Integer messageID) throws SQLException {
+        String set = "UPDATE " + messages_table + " SET messageRead = ?"
+                + " WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(set);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+
 }
