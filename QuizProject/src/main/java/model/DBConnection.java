@@ -648,4 +648,69 @@ public class DBConnection {
         return true;
     }
 
+    public boolean addQuizHistory(int quizID, int userID, int score) throws SQLException {
+        String set = "INSERT INTO " + quiz_history_table +
+                " (quizID, userID, dateTaken, score, `completed?`, timeStamp) VALUES ( ?, ?, ?, ?, ?, ? )";
+        PreparedStatement sql = connection.prepareStatement(set);
+        java.util.Date utilDate = new java.util.Date();
+        Date date = new Date(utilDate.getTime());
+        sql.setInt(1, quizID);
+        sql.setInt(2, userID);
+        sql.setDate(3, date);
+        sql.setInt(4, score);
+        sql.setInt(5,1); //Completed = true
+        sql.setDate(6, date);
+        int success = sql.executeUpdate();
+        boolean worked = false;
+        if (success > 0) {
+            worked = true;
+        }
+        return worked;
+    }
+
+    public Set<Integer> getAdminUserIDsSet() throws SQLException {
+        Set<Integer> adminIDs = new HashSet<Integer>();
+        Integer currAdminID;
+        ResultSet rs;
+
+        String adminGet     = "SELECT userID FROM types INNER JOIN userTypes" +
+                " using (typeID) WHERE typeID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(adminGet);
+        sql.setInt(1, User.ADMIN);
+        rs = sql.executeQuery();
+        while ( rs.next() ) {
+            currAdminID = ( (Number) rs.getObject(1) ).intValue();
+            adminIDs.add(currAdminID);
+        }
+        return adminIDs;
+    }
+
+
+    public boolean createCookie(int userID, String cookie) throws SQLException {
+        String update = "UPDATE " + users_table + " SET cookie = ? WHERE userID = ?;";
+        PreparedStatement sql = connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
+        sql.setString(1, cookie);
+        sql.setInt(2, userID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        return true;
+    }
+
+    public int getUserIDFromCookie(String cookieIn) throws SQLException {
+
+        String select = "SELECT * FROM " + users_table + " WHERE cookie = ?;";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setString(1, cookieIn);
+        ResultSet userRow = sql.executeQuery();
+        if (!userRow.first()) {
+
+            return -1;
+        }
+        return userRow.getInt("userID");
+    }
+
 }
