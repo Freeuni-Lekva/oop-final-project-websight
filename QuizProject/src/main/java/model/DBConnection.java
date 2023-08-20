@@ -338,4 +338,201 @@ public class DBConnection {
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
     }
+    public ResultSet getQuizInfo(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + quizzes_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getQuizQuestions (int quizID) throws SQLException {
+        String select = "SELECT * FROM " + questions_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getQuestionAnswers (int questionID) throws SQLException {
+        String select = "SELECT * FROM " + answers_table + " WHERE questionID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, questionID);
+        return sql.executeQuery();
+    }
+    public boolean deleteQuiz(int quizID) throws SQLException {
+        String delete =
+                "DELETE " +
+                        "quizzes, history, scores,ratings, tags, categories, " +
+                        "answers,questions FROM " +
+                        "quizzes LEFT JOIN history     on quizzes.quizID = history.quizID" +
+                        " LEFT JOIN scores          on quizzes.quizID = scores.quizID" +
+                        " LEFT JOIN ratings on quizzes.quizID = ratings.quizID" +
+                        " LEFT JOIN tags        on quizzes.quizID = tags.quizID" +
+                        " LEFT JOIN categories  on quizzes.quizID = cCategories.quizID" +
+                        " LEFT JOIN answers     on quizzes.quizID = answers.quizID" +
+                        " LEFT JOIN questions   on quizzes.quizID = questions.quizID" +
+                        " WHERE quizzes.quizID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(delete);
+        sql.setInt(1, quizID);
+        return sql.execute();
+    }
+
+    public ResultSet getMessage(int messageID) throws SQLException {
+        String select = "SELECT * FROM " + messages_table + " WHERE messageID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, messageID);
+        return sql.executeQuery();
+    }
+
+    public String getPassword(int userID) throws SQLException {
+        String passwordGet = "SELECT password FORM users WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(passwordGet);
+        sql.setInt(1, userID);
+        ResultSet rs = sql.executeQuery();
+        if (!rs.first())
+            return "";
+        return rs.getString(1);
+    }
+
+    public boolean deleteMessage(Integer messageID) throws SQLException {
+        String delete = "DELETE FROM " + messages_table + " WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(delete);
+        sql.setInt(1, messageID);
+
+        return sql.execute();
+    }
+    public boolean readMessage (Integer messageID) throws SQLException {
+        String set = "UPDATE " + messages_table + " SET messageRead = ?"
+                + " WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(set);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+
+    public ResultSet getHistories(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + quiz_history_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getTagTypes() throws SQLException {
+        String select = "SELECT * FROM " + tags_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+    public ResultSet getTags(int quizID) throws SQLException {
+        String select = "SELECT a.quizID, a.quizName, c.tagName FROM " + quizzes_table + " a LEFT JOIN "
+                + quiz_tags_table + " b ON a.quizID = b.quizID LEFT JOIN "
+                + tags_table + " c ON b.tagID = c.tagID WHERE a.quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getCategoryTypes() throws SQLException {
+        String select = "SELECT * FROM " + categories_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getRatings(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getRatingsByUserID(int userID) throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table + " WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, userID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getHistoriesByUserID(int userID) throws SQLException {
+        String select = "SELECT * FROM " + quiz_history_table + " WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, userID);
+        return sql.executeQuery();
+    }
+    public boolean addQuizRating(int quizID, int userID, int rating)
+            throws SQLException {
+        String set = "INSERT INTO " + user_ratings_table +
+                " (userID, quizID, ratingValue) VALUES ( ?, ?, ?)";
+
+        PreparedStatement sql = connection.prepareStatement(set);
+        sql.setInt(1, userID);
+        sql.setInt(2, quizID);
+        sql.setInt(3, rating);
+
+        return sql.execute();
+    }
+
+    public ResultSet getAllRatings() throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table;
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+
+    public boolean updateQuizRating(int ratingID, int rating)
+            throws SQLException {
+        // Updates the ratingValue of the rating with ID ratingID
+        String update = "UPDATE " + user_ratings_table +
+                " SET ratingValue = ? WHERE ratingID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setInt(1, rating);
+        sql.setInt(2, ratingID);
+
+        return sql.execute();
+    }
+
+    public boolean setAchievement(int userID, int achievementID, String description) throws SQLException{
+        ResultSet genKey = null;
+        String insert = "insert into " + user_achievements_table + " (userID, achievementID) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, userID);
+        sql.setInt(2, achievementID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating achievement failed, no gen key obtained.");
+        return true;
+    }
+
+    public boolean addTag(int quizID, int tagID) throws SQLException {
+        String insert = "insert into " + quiz_tags_table + " (quizID, tagID) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, quizID);
+        sql.setInt(2, tagID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        ResultSet genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating achievement failed, no gen key obtained.");
+        return true;
+    }
+    public int addNewTag(String newTag) throws SQLException {
+        String insert = "insert into " + tags_table + " (tagName) VALUES (?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setString(1, newTag);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        } //if
+
+        ResultSet genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating achievement failed, no gen key obtained.");
+        return genKey.getInt(1);
+    }
 }
