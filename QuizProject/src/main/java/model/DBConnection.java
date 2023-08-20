@@ -412,4 +412,89 @@ public class DBConnection {
         return sql.execute();
     }
 
+    public ResultSet getHistories(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + quiz_history_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getTagTypes() throws SQLException {
+        String select = "SELECT * FROM " + tags_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+    public ResultSet getTags(int quizID) throws SQLException {
+        String select = "SELECT a.quizID, a.quizName, c.tagName FROM " + quizzes_table + " a LEFT JOIN "
+                + quiz_tags_table + " b ON a.quizID = b.quizID LEFT JOIN "
+                + tags_table + " c ON b.tagID = c.tagID WHERE a.quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getCategoryTypes() throws SQLException {
+        String select = "SELECT * FROM " + categories_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+    public ResultSet getCategories(int quizID) throws SQLException {
+        String select = "SELECT a.quizID, a.quizName, c.categoryName FROM " + quizzes_table + " a LEFT JOIN "
+                + quiz_categories_table+ " b ON a.quizID = b.quizID LEFT JOIN "
+                + categories_table + " c ON b.categoryID = c.categoryID WHERE a.quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getRatings(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getRatingsByUserID(int userID) throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table + " WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, userID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getHistoriesByUserID(int userID) throws SQLException {
+        String select = "SELECT * FROM " + quiz_history_table + " WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, userID);
+        return sql.executeQuery();
+    }
+    public boolean addQuizRating(int quizID, int userID, int rating)
+            throws SQLException {
+        String set = "INSERT INTO " + user_ratings_table +
+                " (userID, quizID, ratingValue) VALUES ( ?, ?, ?)";
+
+        PreparedStatement sql = connection.prepareStatement(set);
+        sql.setInt(1, userID);
+        sql.setInt(2, quizID);
+        sql.setInt(3, rating);
+
+        return sql.execute();
+    }
+
+    public ResultSet getAllRatings() throws SQLException {
+        String select = "SELECT * FROM " + user_ratings_table;
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+
+    public boolean updateQuizRating(int ratingID, int rating)
+            throws SQLException {
+        // Updates the ratingValue of the rating with ID ratingID
+        String update = "UPDATE " + user_ratings_table +
+                " SET ratingValue = ? WHERE ratingID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setInt(1, rating);
+        sql.setInt(2, ratingID);
+
+        return sql.execute();
+    }
+
 }
