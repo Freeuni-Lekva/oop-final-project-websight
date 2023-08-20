@@ -338,4 +338,42 @@ public class DBConnection {
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
     }
+    public ResultSet getQuizInfo(int quizID) throws SQLException {
+        String select = "SELECT * FROM " + quizzes_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+
+    public ResultSet getQuizQuestions (int quizID) throws SQLException {
+        String select = "SELECT * FROM " + questions_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, quizID);
+        return sql.executeQuery();
+    }
+    public ResultSet getQuestionAnswers (int questionID) throws SQLException {
+        String select = "SELECT * FROM " + answers_table + " WHERE questionID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, questionID);
+        return sql.executeQuery();
+    }
+    public boolean deleteQuiz(int quizID) throws SQLException {
+        String delete =
+                "DELETE " +
+                        "quizzes, history, scores,ratings, tags, categories, " +
+                        "answers,questions FROM " +
+                        "quizzes LEFT JOIN history     on quizzes.quizID = history.quizID" +
+                        " LEFT JOIN scores          on quizzes.quizID = scores.quizID" +
+                        " LEFT JOIN ratings on quizzes.quizID = ratings.quizID" +
+                        " LEFT JOIN tags        on quizzes.quizID = tags.quizID" +
+                        " LEFT JOIN categories  on quizzes.quizID = cCategories.quizID" +
+                        " LEFT JOIN answers     on quizzes.quizID = answers.quizID" +
+                        " LEFT JOIN questions   on quizzes.quizID = questions.quizID" +
+                        " WHERE quizzes.quizID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(delete);
+        sql.setInt(1, quizID);
+        return sql.execute();
+    }
+
 }
