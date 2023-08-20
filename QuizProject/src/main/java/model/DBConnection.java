@@ -376,4 +376,21 @@ public class DBConnection {
         return sql.execute();
     }
 
+    public ResultSet getMessage(int messageID) throws SQLException {
+        String select = "SELECT * FROM " + messages_table + " WHERE messageID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, messageID);
+        return sql.executeQuery();
+    }
+
+    public String getPassword(int userID) throws SQLException {
+        String passwordGet = "SELECT password FORM users WHERE userID = ?";
+        PreparedStatement sql = connection.prepareStatement(passwordGet);
+        sql.setInt(1, userID);
+        ResultSet rs = sql.executeQuery();
+        if (!rs.first())
+            return "";
+        return rs.getString(1);
+    }
+
 }
