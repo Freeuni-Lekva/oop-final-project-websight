@@ -2,6 +2,8 @@ package model;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DBConnection {
 
@@ -535,4 +537,210 @@ public class DBConnection {
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return genKey.getInt(1);
     }
+    public boolean toUserDeleteMessage(Integer messageID) throws SQLException {
+        String update = "UPDATE " + messages_table+ " SET toUserDeleted = ? " +
+                "WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+    public boolean fromUserDeleteMessage(Integer messageID) throws SQLException {
+        String update = "UPDATE " + messages_table + " SET fromUserDeleted = ? " +
+                "WHERE messageID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(update);
+        sql.setBoolean(1, true);
+        sql.setInt(2, messageID);
+
+        return sql.execute();
+    }
+
+    public String getQuizName(int quizID) throws SQLException {
+        String userIDGet = "SELECT quizName FROM " + quizzes_table + " WHERE quizID = ?";
+        PreparedStatement sql = connection.prepareStatement(userIDGet);
+        sql.setInt(1, quizID);
+        ResultSet rs = sql.executeQuery();
+        rs.first();
+        return rs.getString(1);
+    }
+    public ResultSet searchForQuiz(String quizFilter, String tagFilter, String catFilter) throws SQLException {
+        String tagAddOn = "";
+        String catAddOn = "";
+        if (tagFilter == null || tagFilter.equals("")) {
+            tagFilter = "%";
+            tagAddOn = "or b.tagID is null ";
+        } //if
+        if (catFilter == null || catFilter.equals("")) {
+            catFilter = "%";
+            catAddOn = "or c.categoryID is null ";
+        } //if
+        if (quizFilter == null || quizFilter.equals("")) {
+            quizFilter = "%";
+        } //if
+        else {
+            quizFilter = "%" + quizFilter + "%";
+        } //else
+
+        String select = "SELECT * FROM " + quizzes_table + " a LEFT JOIN " + quiz_tags_table + " b"
+                + " ON a.quizID = b.quizID LEFT JOIN " + quiz_categories_table + " c ON a.quizID = c.quizID "
+                + " WHERE ( a.quizName like ? ) AND (b.tagID like ? " + tagAddOn + " ) AND ( c.categoryID like ? "
+                + catAddOn + " );";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setString(1, quizFilter);
+        sql.setString(2, tagFilter);
+        sql.setString(3, catFilter);
+        return sql.executeQuery();
+    }
+    public ResultSet getAllQuizzes() throws SQLException {
+        String select = "SELECT * FROM " + quizzes_table + ";";
+        PreparedStatement sql = connection.prepareStatement(select);
+        return sql.executeQuery();
+    }
+    public ArrayList<Message> getRecentMessages(int userID) throws SQLException{
+        ResultSet rs = getUserMessages(userID);
+        Set<Integer> validTypes = new HashSet<Integer>() {
+            private static final long serialVersionUID = -5488924326330841157L;
+            {
+                add(Message.NOTE);
+                add(Message.CHALLENGE);
+                add(Message.FRIEND);
+            }};
+        ArrayList<Message> messages = Message.loadMessages(rs, validTypes, userID, null);
+        ArrayList<Message> recent = new ArrayList<Message>();
+        ArrayList<Message> result = new ArrayList<Message>();
+        for (int i = 0; i < messages.size(); i++) {
+            int recentIndex = 0;
+            while(recentIndex < recent.size() &&
+                    recent.get(recentIndex).getDate().compareTo(messages.get(i).getDate()) > 0) {
+                recentIndex++;
+            }
+            recent.add(recentIndex , messages.get(i));
+        }
+        for (int i = 0; i < recent.size(); i++) {
+            if (i >= 3) break;
+            result.add(recent.get(i));
+        }
+        return result;
+    }
+
+    public ResultSet getAnswerInfo(int questionId) throws SQLException {
+        String select = "SELECT * FROM "  + answers_table + " WHERE questionID = ?";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setInt(1, questionId);
+        return sql.executeQuery();
+    }
+    public boolean addCat(int quizID, int catID) throws SQLException {
+        String insert = "insert into " + quiz_categories_table + " (quizID, categoryID) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, quizID);
+        sql.setInt(2, catID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        ResultSet genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating achievement failed, no gen key obtained.");
+        return true;
+    }
+
+    public boolean addQuizHistory(int quizID, int userID, int score) throws SQLException {
+        String set = "INSERT INTO " + quiz_history_table +
+                " (quizID, userID, dateTaken, score, `completed?`, timeStamp) VALUES ( ?, ?, ?, ?, ?, ? )";
+        PreparedStatement sql = connection.prepareStatement(set);
+        java.util.Date utilDate = new java.util.Date();
+        Date date = new Date(utilDate.getTime());
+        sql.setInt(1, quizID);
+        sql.setInt(2, userID);
+        sql.setDate(3, date);
+        sql.setInt(4, score);
+        sql.setInt(5,1); //Completed = true
+        sql.setDate(6, date);
+        int success = sql.executeUpdate();
+        boolean worked = false;
+        if (success > 0) {
+            worked = true;
+        }
+        return worked;
+    }
+
+    public Set<Integer> getAdminUserIDsSet() throws SQLException {
+        Set<Integer> adminIDs = new HashSet<Integer>();
+        Integer currAdminID;
+        ResultSet rs;
+
+        String adminGet     = "SELECT userID FROM types INNER JOIN userTypes" +
+                " using (typeID) WHERE typeID = ?";
+
+        PreparedStatement sql = connection.prepareStatement(adminGet);
+        sql.setInt(1, User.ADMIN);
+        rs = sql.executeQuery();
+        while ( rs.next() ) {
+            currAdminID = ( (Number) rs.getObject(1) ).intValue();
+            adminIDs.add(currAdminID);
+        }
+        return adminIDs;
+    }
+
+
+    public boolean createCookie(int userID, String cookie) throws SQLException {
+        String update = "UPDATE " + users_table + " SET cookie = ? WHERE userID = ?;";
+        PreparedStatement sql = connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
+        sql.setString(1, cookie);
+        sql.setInt(2, userID);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating achievement failed, no rows affected.");
+        }
+
+        return true;
+    }
+
+    public int getUserIDFromCookie(String cookieIn) throws SQLException {
+
+        String select = "SELECT * FROM " + users_table + " WHERE cookie = ?;";
+        PreparedStatement sql = connection.prepareStatement(select);
+        sql.setString(1, cookieIn);
+        ResultSet userRow = sql.executeQuery();
+        if (!userRow.first()) {
+
+            return -1;
+        }
+        return userRow.getInt("userID");
+    }
+
+    public int createUser(String userName, String password) throws SQLException {
+        ResultSet genKey = null;
+        String insert = "insert into " + users_table + " (userName, password) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setString(1, userName);
+        sql.setString(2, password);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating user failed, no gen key obtained.");
+        int userID = genKey.getInt(1);
+
+        System.out.println("Created the user, about to insert userType");
+        insert = "insert into " + user_types_table + " (userID, typeID) VALUES (?, ?);";
+        sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, userID);
+        sql.setInt(2, User.USER);
+        affectedRows = sql.executeUpdate();
+        System.out.println("Inserted the userType.");
+        if (affectedRows == 0) {
+            throw new SQLException("Creating userType failed, no rows affected.");
+        }
+
+        return userID;
+    }
+
 }
