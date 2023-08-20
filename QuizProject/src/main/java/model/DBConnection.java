@@ -437,14 +437,6 @@ public class DBConnection {
         PreparedStatement sql = connection.prepareStatement(select);
         return sql.executeQuery();
     }
-    public ResultSet getCategories(int quizID) throws SQLException {
-        String select = "SELECT a.quizID, a.quizName, c.categoryName FROM " + quizzes_table + " a LEFT JOIN "
-                + quiz_categories_table+ " b ON a.quizID = b.quizID LEFT JOIN "
-                + categories_table + " c ON b.categoryID = c.categoryID WHERE a.quizID = ?";
-        PreparedStatement sql = connection.prepareStatement(select);
-        sql.setInt(1, quizID);
-        return sql.executeQuery();
-    }
 
     public ResultSet getRatings(int quizID) throws SQLException {
         String select = "SELECT * FROM " + user_ratings_table + " WHERE quizID = ?";
