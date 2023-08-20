@@ -713,4 +713,34 @@ public class DBConnection {
         return userRow.getInt("userID");
     }
 
+    public int createUser(String userName, String password) throws SQLException {
+        ResultSet genKey = null;
+        String insert = "insert into " + users_table + " (userName, password) VALUES (?, ?);";
+        PreparedStatement sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setString(1, userName);
+        sql.setString(2, password);
+        int affectedRows = sql.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        genKey = sql.getGeneratedKeys();
+        if (!genKey.first())
+            throw new SQLException("Creating user failed, no gen key obtained.");
+        int userID = genKey.getInt(1);
+
+        System.out.println("Created the user, about to insert userType");
+        insert = "insert into " + user_types_table + " (userID, typeID) VALUES (?, ?);";
+        sql = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+        sql.setInt(1, userID);
+        sql.setInt(2, User.USER);
+        affectedRows = sql.executeUpdate();
+        System.out.println("Inserted the userType.");
+        if (affectedRows == 0) {
+            throw new SQLException("Creating userType failed, no rows affected.");
+        }
+
+        return userID;
+    }
+
 }
