@@ -308,4 +308,26 @@ public class Quiz {
     public void setQuizID(int quizID) {
         this.quizID = quizID;
     }
+
+    public Integer getUserRating(int userID) throws SQLException{
+        int curr;
+        Integer rat = null;
+        ResultSet ratings = connection.getRatings(quizID);
+        while (ratings.next()) {
+            curr = ratings.getInt("userID");
+            if (userID == curr) rat = ratings.getInt("ratingValue");
+        }
+        return rat;
+    }
+
+    public Integer getUserRatingID(int userID) throws SQLException{
+        int curr;
+        Integer ratID = null;
+        ResultSet ratings = connection.getRatings(quizID);
+        while (ratings.next()) {
+            curr = ratings.getInt("userID");
+            if ( userID == curr ) ratID = ratings.getInt("ratingID");
+        }
+        return ratID;
+    }
 }
