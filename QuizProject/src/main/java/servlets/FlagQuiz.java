@@ -3,6 +3,8 @@ package servlets;
 import java.io.IOException;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
+
+import model.QuizFlag;
 import model.User;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,12 @@ public class FlagQuiz extends HttpServlet {
             int QID = Integer.parseInt( req.getParameter("quizID") );
             String QName = req.getParameter("quizName");
             Set<Integer> IDs = conn.getAdminUserIDsSet();
+            for (Integer currAdminID : IDs) {
+                QuizFlag.makeQuizFlag(QID, QName, UID, currAdminID, UName, conn);
+            }
+
+            req.setAttribute("flagNote", "Flagged");
+            req.getRequestDispatcher("quizSummary.jsp?quizID=" + QID).forward(req, res);
         } catch (Exception e) {
             e.printStackTrace();
             req.getRequestDispatcher("error.jsp").forward(req, res);
