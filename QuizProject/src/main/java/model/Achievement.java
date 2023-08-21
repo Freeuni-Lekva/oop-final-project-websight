@@ -32,5 +32,29 @@ public class Achievement {
         }
         return result;
     }
+
+    public static ArrayList<String> getAchivment(int userID, DBConnection connection) throws SQLException, ClassNotFoundException {
+        ArrayList<String> result = new ArrayList<String>();
+        DBConnection db = new DBConnection();
+        ResultSet set = db.getQuizzesCreatedByUserIDFromDB(userID);
+        int quizzesCreated = 0;
+        while (set.next()){
+            quizzesCreated++;
+        }
+        if (quizzesCreated == 1) {
+            result.add(achievementNames[AMATEUR]);
+            connection.setAchievement(userID, AMATEUR,
+                    "Congrats, you have authored a quiz!");
+        } else if (quizzesCreated == 5) {
+            result.add(achievementNames[PROLIFIC]);
+            connection.setAchievement(userID, PROLIFIC,
+                    "Congrats, you have authored five quizzes!");
+        } else if (quizzesCreated == 10) {
+            result.add(achievementNames[PRODIGIOUS]);
+            connection.setAchievement(userID, PRODIGIOUS,
+                    "Congrats, you have authored ten quizzes!");
+        }
+        return result;
+    }
 }
 

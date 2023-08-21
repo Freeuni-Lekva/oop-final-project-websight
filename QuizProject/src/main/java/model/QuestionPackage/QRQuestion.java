@@ -2,7 +2,6 @@ package model.Question;
 
 import model.Answer.QRAnswer;
 import model.DBConnection;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
