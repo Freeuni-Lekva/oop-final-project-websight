@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="/main/java.*, java.sql.*" %>
+<%@ page import="main.java.*, java.sql.*" %>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
