@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
-<%@ page import="/main/java.*,java.util.*,java.sql.*" %>
+<%@ page import="main.java.*,java.util.*,java.sql.*" %>
 <%
 	ArrayList<Message> messages;
 	DBConnection connection;
