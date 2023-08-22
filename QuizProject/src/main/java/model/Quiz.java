@@ -263,6 +263,8 @@ public class Quiz {
         return practiceModeOn;
     }
 
+
+
     public boolean isPracticeModeOn() {
         return practiceModeOn;
     }
@@ -288,6 +290,40 @@ public class Quiz {
         String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 
         result += "<h3 style='color:#d9534f'> You took " + time + " to complete the quiz.</h3>";
+        return result;
+    }
+
+    public double getRating() throws SQLException{
+        int numValues = 0;
+        int num = 0;
+        ResultSet ratings = connection.getRatings(quizID);
+        while (ratings.next()) {
+            num += ratings.getInt("ratingValue");
+            numValues++;
+        }
+        return numValues == 0 ? 0 : num / (double)numValues;
+    }
+
+    public Integer getUserStanding(int userID) throws SQLException{
+        int currUserID;
+        Integer rating = null;
+
+        ResultSet ratings = connection.getRatings(quizID);
+        while (ratings.next()) {
+            currUserID = ratings.getInt("userID");
+            if ( userID == currUserID ) {
+                rating = ratings.getInt("ratingValue");
+            }
+        }
+        return rating;
+    }
+
+    public ArrayList<String> getTags() throws SQLException {
+        ArrayList<String> result = new ArrayList<String>();
+        ResultSet tags = connection.getTags(quizID);
+        while(tags.next()) {
+            result.add(tags.getString("tagName"));
+        }
         return result;
     }
 
