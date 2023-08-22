@@ -5,12 +5,10 @@
 <!DOCTYPE html>
 <html>
 <%
-	// Figure out the message type
 	String messageType;
 	Integer messageCode = Integer.parseInt( request.getParameter("type") );
-	if ( messageCode.equals(Message.TYPE_NOTE) ) {
+	if ( messageCode.equals(Message.NOTE) ) {
 		messageType = "note";
-	//needs additional types code
 	} else {
 		messageType = "message";
 	}
