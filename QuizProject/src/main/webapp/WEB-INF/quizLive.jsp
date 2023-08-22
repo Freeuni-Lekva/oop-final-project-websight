@@ -18,7 +18,7 @@
 <div class="container">
   <div class="jumbotron">
     <br>
-    <form action="QuizControllerServlet" method="post">
+    <form action="quizControler" method="post">
       <%= request.getAttribute("html")  %>
       <div><input class="btn btn-default" type="submit" value="Next" /></div>
     </form>
