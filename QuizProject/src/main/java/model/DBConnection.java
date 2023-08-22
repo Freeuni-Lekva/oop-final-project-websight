@@ -32,7 +32,7 @@ public class DBConnection {
     public DBConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
 
-        connection = DriverManager.getConnection("jdbc:mysql://" + database_port, username, password);
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:" + database_port+"/"+database_name+"?characterEncoding=UTF8&user="+username+"&password="+password);
         PreparedStatement statement = connection.prepareStatement("USE " + database_name);
         statement.execute();
     } // try/catch
