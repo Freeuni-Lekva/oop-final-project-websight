@@ -9,7 +9,7 @@
 <div class="container">
     <div class="jumbotron">
         <h3 style="color:#428bca">What type of question would you like to add?</h3>
-        <form role="form" action="QuizCreateServlet" method="post">
+        <form role="form" action="createServlet" method="post">
             <div class="form-group">
                 <div class="col-md-10">
                     <input name="origin" type="hidden" value="NextQuestion" >
