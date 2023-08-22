@@ -2,6 +2,8 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="model.*" %>
 <%@ page import="servlets.LogIn" %>
+<%@ page import="model.DBConnection" %>
+<%@ page import="model.User" %>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <%
@@ -73,7 +75,7 @@
 									<div class="col-md-offset-2 col-md-9">
 										<input name="origin" type="hidden" value="Login" />
 										<button class="btn btn-primary" type="submit">Log in</button>
-										or <a class='btn btn-default' href="CreateAccount.jsp">Go to create account</a>
+										or <a class='btn btn-default' href="createAccount.jsp">Go to create account</a>
 									</div>
 								</div>
 							</form>
