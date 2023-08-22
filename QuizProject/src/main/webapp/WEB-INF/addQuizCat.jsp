@@ -39,7 +39,6 @@
                   <option value="-1" selected>Select A Category</option>
                   <%
                     ResultSet rs = dbConnection.getCategoryTypes();
-                    rs.beforeFirst();
                     while(rs.next()) {
                       out.println("<option value=\"" + rs.getInt("categoryID") + "\">" + rs.getString("categoryName") + "</option>");
                     }
