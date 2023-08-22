@@ -1,12 +1,11 @@
 package model;
 
-import model.Question.*;
+import model.QuestionPackage.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Quiz {
 
@@ -15,7 +14,6 @@ public class Quiz {
     private static final int MULTIPLE_CHOICE = 3;
     private static final int PICTURE_RESPONSE = 4;
 
-    /** Quiz attributes in the database */
     private String quizName;
     private Date quizCreation;
     private int quizCreatorUserID;
@@ -30,12 +28,11 @@ public class Quiz {
     private ArrayList<Question> questionList;
     private ArrayList<Question> allQuestions;
 
-    //MAY NOT NEED THIS, JUST IN CASE WE NEED QUESTION ORDER AFTER QUIZ IS OVER
     private ArrayList<Question> questionOrder;
     private int quizID;
     private int score;
     private int possibleScore;
-    private long startTime; //SHOULD THIS BE A LONG/USING currentTimeMillis()
+    private long startTime;
     private boolean question;
     private Question currQuestion;
     private Random rand = new Random();
@@ -49,7 +46,7 @@ public class Quiz {
         ResultSet quizInfo = connection.getQuizFromDB(quizID);
         quizInfo.first();
         quizName = quizInfo.getString("quizName");
-        quizCreation = quizInfo.getDate("quizCreation"); //NEED TO TEST THIS java.sql.date to java.util.date conversion
+        quizCreation = quizInfo.getDate("quizCreation");
         quizCreatorUserID = quizInfo.getInt("quizCreatoruserID");
         singlePage = quizInfo.getBoolean("singlePage?");
         randomOrder = quizInfo.getBoolean("randomOrder?");
@@ -74,7 +71,7 @@ public class Quiz {
     }
 
     /*Use it if is create Quiz**/
-    Quiz(String quizName, int quizCreatorUserID, boolean singlePage, boolean randomOrder, boolean immediateCorrection, boolean practiceMode, DBConnection connection) throws SQLException {
+    public Quiz(String quizName, int quizCreatorUserID, boolean singlePage, boolean randomOrder, boolean immediateCorrection, boolean practiceMode, DBConnection connection) throws SQLException {
         this.connection = connection;
         this.quizName = quizName;
         this.quizCreation = null;
