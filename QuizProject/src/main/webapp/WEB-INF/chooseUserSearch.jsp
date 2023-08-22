@@ -44,7 +44,7 @@
                             int i = 1;
                             for (Integer userId : userMap.keySet()) {
                                 out.println("<tr><td><strong>" + i + "</strong></td><td>");
-                                out.println("<a class='btn btn-danger btn-xs' href='userpage.jsp?userID=" + userId + "'>");
+                                out.println("<a class='btn btn-danger btn-xs' href='userPage.jsp?userID=" + userId + "'>");
                                 out.println(dbConnection.getUserName(userId) + "</a></td></tr>");
                                 i++;
                             }

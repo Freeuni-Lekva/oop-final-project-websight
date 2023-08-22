@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="main.java.model.User" %>
-<%@ page import="main.java.servlets.LogIn" %>
-<%@ page import="main.java.model.DBConnection" %>
+<%@ page import="model.*" %>
+<%@ page import="servlets.LogIn" %>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <%
@@ -12,7 +11,7 @@
 	User user = (User) session.getAttribute("user");
 	if (user != null && user.getUserID() != -1) {
 		Integer userID  = user.getUserID();
-		String userpage = "userpage.jsp?userID=" + userID;
+		String userpage = "userPage.jsp?userID=" + userID;
 		response.sendRedirect(userpage);
 		return;
 	}
@@ -21,13 +20,13 @@
 	if (cookies != null) {
 		for (int i = 0; i < cookies.length; i++) {
 			Cookie c = cookies[i];
-			if (c.getName().equals(LoginServlet.COOKIE_NAME)) {
+			if (c.getName().equals(LogIn.COOKIE_NAME)) {
 				int userID = dbConnection.getUserIDFromCookie(c.getValue());
 				if ( userID != -1) {
 					String userName = dbConnection.getUserName(userID);
-					user = new User(userID, userName, dbConnection);
+					user = new User(userID, userName, User.USER, dbConnection);
 					session.setAttribute("user", user);
-					String userpage = "userpage.jsp?userID=" + userID;
+					String userpage = "userPage.jsp?userID=" + userID;
 					response.sendRedirect(userpage);
 					return;
 				}

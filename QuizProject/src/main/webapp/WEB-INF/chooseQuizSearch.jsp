@@ -52,7 +52,7 @@
 					String quizName        = quizMap.get(quizId);
 					out.println("<tr><td><a class='btn btn-primary' href='quizSummary.jsp?quizID=");
 					out.println(quizId + "' >" + quizName + "</a></td>");
-					out.println("<td><a class='btn btn-default' href='userpage.jsp?userID=");
+					out.println("<td><a class='btn btn-default' href='userPage.jsp?userID=");
 					out.println(quizCreatorMap.get(quizId) + "' >" + creatorUserName + "</a></td></tr>");
 				}
 				out.println("</tbody></table>");

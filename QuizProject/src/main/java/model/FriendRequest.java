@@ -26,7 +26,7 @@ public class FriendRequest extends Message {
     generateFriendContent(Integer from, String fromName) {
         String res =
                 "<h4>" + fromName + " wants to be your friend!</h4>" +
-                        "User <a class='btn btn-default btn-xs' href='userpage.jsp?userID=" +
+                        "User <a class='btn btn-default btn-xs' href='userPage.jsp?userID=" +
                         from + "'>" + fromName + "</a> has requested to be your " +
                         "friend! Check out their page or click below to accept the request<br><br>";
         return res;

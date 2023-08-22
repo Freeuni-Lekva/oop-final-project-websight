@@ -250,7 +250,7 @@
         <div class="row">
             <div class="col-md-7">
                 <h1><%= quizName %>
-                    <a class="btn btn-default btn-sm" <% out.println("href=userpage.jsp?userID=" + creatorID ); %> >
+                    <a class="btn btn-default btn-sm" <% out.println("href=userP    age.jsp?userID=" + creatorID ); %> >
                         by <%= creatorName %></a>
                 </h1>
                 <br>

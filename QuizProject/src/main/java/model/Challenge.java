@@ -40,7 +40,7 @@ public class Challenge extends Message {
     generateChallenge(int fromUserID, String fromUserName, int quizID, String quizName) {
         String content =
                 "<h4>Someone challenged you to a quiz!</h4> User <a class='btn " +
-                        "btn-default btn-xs' href='userpage.jsp?userID=" + fromUserID + "'>" +
+                        "btn-default btn-xs' href='userPage.jsp?userID=" + fromUserID + "'>" +
                         fromUserName + "</a> suggested you take the quiz " +
                         "<a class='btn btn-default btn-xs' href='quizSummary.jsp?quizID=" +
                         quizID + "'>" + quizName + "</a> Follow the link to find out more!<br>";
