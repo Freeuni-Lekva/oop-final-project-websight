@@ -9,8 +9,19 @@
       <servlet-class>servlets.QuizCreateServlet</servlet-class>
     </servlet>
 
+    <servlet>
+      <servlet-name>QuizControlerServlet</servlet-name>
+      <servlet-class>servlets.QuizControlerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>QuizControlerServlet</servlet-name>
+      <url-pattern>/quizControler</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
       <servlet-name>QuizCreateServlet</servlet-name>
       <url-pattern>/createServlet</url-pattern>
     </servlet-mapping>
+
 </web-app>
