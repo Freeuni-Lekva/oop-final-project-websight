@@ -31,7 +31,6 @@
 			Map<Integer, Integer> quizCreatorMap = new HashMap<Integer, Integer>();
 			session.setAttribute("quiz", null);
 			try {
-				quizzes.beforeFirst();
 				while (quizzes.next()) {
 					String quizName   = quizzes.getString("quizName");
 					int quizId        = quizzes.getInt("quizID");
