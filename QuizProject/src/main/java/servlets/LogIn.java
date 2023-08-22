@@ -86,7 +86,7 @@ public class LogIn extends HttpServlet {
         }
         userCookie.setMaxAge(365 * 24 * 60 * 60);
         res.addCookie(userCookie);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("userpage.jsp?userID=" + ID);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("userPage.jsp?userID=" + ID);
         requestDispatcher.forward(req, res);
     }
 

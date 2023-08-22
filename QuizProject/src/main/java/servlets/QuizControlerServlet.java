@@ -59,6 +59,7 @@ public class QuizControlerServlet extends HttpServlet {
             if (currQuiz.getSinglePage()) {
                 currQuiz.sendAllAnswers(request);
             } else {
+                session.setAttribute("quiz", currQuiz);
                 currQuiz.sendAnswers( request );
             }
         }
@@ -73,7 +74,7 @@ public class QuizControlerServlet extends HttpServlet {
             request.setAttribute("html", html);
             forwardToJSP(request, response, "quizLive.jsp");
         } else {
-            session.setAttribute("quiz", null);
+            session.setAttribute("quiz", currQuiz);
             request.setAttribute("quiz", currQuiz);
             forwardToJSP(request, response, "quizResult.jsp");
         }
@@ -85,7 +86,7 @@ public class QuizControlerServlet extends HttpServlet {
             request.setAttribute("html", html);
             forwardToJSP(request, response, "quizLive.jsp");
         } else {
-            session.setAttribute("quiz", null);
+            session.setAttribute("quiz", currQuiz);
             request.setAttribute("quiz", currQuiz);
             forwardToJSP(request, response, "quizResults.jsp");
         }
