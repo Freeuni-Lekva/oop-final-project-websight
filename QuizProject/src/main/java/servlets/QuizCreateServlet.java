@@ -70,16 +70,16 @@ public class QuizCreateServlet extends HttpServlet {
     private void nextQuestionPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String questionType = request.getParameter("questionType");
         if (questionType.equals(Q_QR)) {
-            forwardToJSP(request, response, "CreateQuizQR.jsp");
+            forwardToJSP(request, response, "createQuizQR.jsp");
         }
         else if (questionType.equals(Q_FB)) {
-            forwardToJSP(request, response, "CreateQuizFB.jsp");
+            forwardToJSP(request, response, "createQuizFB.jsp");
         }
         else if (questionType.equals(Q_MC)) {
-            forwardToJSP(request, response, "CreateQuizMC.jsp");
+            forwardToJSP(request, response, "createQuizMC.jsp");
         }
         else if (questionType.equals(Q_PR)) {
-            forwardToJSP(request, response, "CreateQuizPR.jsp");
+            forwardToJSP(request, response, "createQuizPR.jsp");
         }
         else {
             Quiz quiz = (Quiz) request.getSession().getAttribute("Quiz");
@@ -91,11 +91,11 @@ public class QuizCreateServlet extends HttpServlet {
                 Achievement.getAchivment(user.getUserID(), dbConnection);
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
-                forwardToJSP(request, response, "CreateQuizPR.jsp");
+                forwardToJSP(request, response, "createQuizPR.jsp");
                 return;
             }
             request.setAttribute("alert", "Your quiz " + quizName + " was created successfully!");
-            forwardToJSP(request, response, "quizSearch.jsp");
+            forwardToJSP(request, response, "searchQuiz.jsp");
         }
     }
 
@@ -106,7 +106,7 @@ public class QuizCreateServlet extends HttpServlet {
             question = createQuestion(request, questionText, Question.QTYPE_QR);
         } catch (SQLException e) {
             e.printStackTrace();
-            forwardToJSP(request, response, "CreateQuiz.jsp");
+            forwardToJSP(request, response, "createQuiz.jsp");
             return;
         }
 
@@ -117,7 +117,7 @@ public class QuizCreateServlet extends HttpServlet {
         try {
             createAnswer(request, answerText, question);
         } catch (SQLException e) {
-            forwardToJSP(request, response, "CreateQuiz.jsp");
+            forwardToJSP(request, response, "createQuiz.jsp");
             return;
         }
 
@@ -135,7 +135,7 @@ public class QuizCreateServlet extends HttpServlet {
             question = createQuestion(request, questionText, Question.QTYPE_FB);
         } catch (SQLException e) {
             e.printStackTrace();
-            forwardToJSP(request,response,"CreateQuiz.jsp");
+            forwardToJSP(request,response,"createQuiz.jsp");
             return;
         }
 
@@ -147,7 +147,7 @@ public class QuizCreateServlet extends HttpServlet {
         try {
             createAnswer(request, answerText, question);
         } catch (SQLException e) {
-            forwardToJSP(request,response,"CreateQuiz.jsp");
+            forwardToJSP(request,response,"createQuiz.jsp");
             return;
         }
 
@@ -161,7 +161,7 @@ public class QuizCreateServlet extends HttpServlet {
             question = createQuestion(request, questionText, Question.QTYPE_MC);
         } catch (SQLException e) {
             e.printStackTrace();
-            forwardToJSP(request,response,"CreateQuiz.jsp");
+            forwardToJSP(request,response,"createQuiz.jsp");
             return;
         }
         String answerText = request.getParameter("mc_correct") +
@@ -172,7 +172,7 @@ public class QuizCreateServlet extends HttpServlet {
             createAnswer(request, answerText, question);
         } catch (SQLException e) {
             e.printStackTrace();
-            forwardToJSP(request,response,"CreateQuiz.jsp");
+            forwardToJSP(request,response,"createQuiz.jsp");
             return;
         }
         nextQuestion(request, response, false);
@@ -185,7 +185,7 @@ public class QuizCreateServlet extends HttpServlet {
             question = createQuestion(request, questionText, Question.QTYPE_PR);
         } catch (SQLException e) {
             e.printStackTrace();
-            forwardToJSP(request,response,"CreateQuiz.jsp");
+            forwardToJSP(request,response,"createQuiz.jsp");
             return;
         }
         String answerText = request.getParameter("response");
