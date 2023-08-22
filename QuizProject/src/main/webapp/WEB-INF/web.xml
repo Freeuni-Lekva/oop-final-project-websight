@@ -4,4 +4,13 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+    <servlet>
+      <servlet-name>QuizCreateServlet</servlet-name>
+      <servlet-class>servlets.QuizCreateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>QuizCreateServlet</servlet-name>
+      <url-pattern>/createServlet</url-pattern>
+    </servlet-mapping>
 </web-app>
