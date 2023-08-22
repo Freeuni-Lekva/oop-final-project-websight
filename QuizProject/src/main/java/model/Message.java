@@ -52,7 +52,7 @@ public class Message implements Comparable<Message> {
         return type;
     }
 
-    public Integer getMessageID() {
+    public Integer getID() {
         return messageID;
     }
 
@@ -93,6 +93,7 @@ public class Message implements Comparable<Message> {
                  Integer validToUserID, Integer validFromUserID) throws SQLException {
 
         ArrayList<Message> messages = new ArrayList<Message>();
+
         Message message;
         int messageType, toUserID, fromUserID;
         Boolean messageRead, toUserDeleted, fromUserDeleted;
@@ -112,18 +113,25 @@ public class Message implements Comparable<Message> {
             toUserDeleted = (Boolean) rs.getObject("toUserDeleted");
             fromUserDeleted = (Boolean) rs.getObject("fromUserDeleted");
 
+            // Construct a Message only if it passes possible filters
             if ((validToUserID != null && toUserID != validToUserID) ||
-                    (validToUserID != null && toUserDeleted)) continue;
+                    (validToUserID != null && toUserDeleted)) {
+                continue; // not TO this user, or TO user deleted
+            }
             if ((validFromUserID != null && fromUserID != validFromUserID) ||
-                    (validFromUserID != null && fromUserDeleted)) continue;
-            if (validTypes != null && !validTypes.contains(messageType)) continue;
-
+                    (validFromUserID != null && fromUserDeleted)) {
+                continue; // not FROM this user, or FROM user deleted
+            }
+            if (validTypes != null && !validTypes.contains(messageType)) {
+                continue; // not correct type
+            }
             message = new Message(messageID, messageType, toUserID,
                     fromUserID, subject, content, date,
                     messageRead);
 
             messages.add(message);
         }
+
         return messages;
     }
 
@@ -143,6 +151,7 @@ public class Message implements Comparable<Message> {
     }
 
     public String display(DBConnection connection) throws SQLException {
+
         StringBuilder html = new StringBuilder();
         html.append(
                 "<div class='row'><br>" +
@@ -170,7 +179,7 @@ public class Message implements Comparable<Message> {
             );
         }
         html.append(
-                "<form class='btn-group btn-group-sm' action='DeleteMessageServlet' method='POST'>" +
+                "<form class='btn-group btn-group-sm' action='DeleteMessage' method='POST'>" +
                         "<input name='messageID' value=" + messageID + " type='hidden'>" +
                         "<button class='btn btn-danger' type='submit'>Delete</button>" +
                         "</form>" +
@@ -184,9 +193,11 @@ public class Message implements Comparable<Message> {
 
     public String displayRow(DBConnection connection, int index, int requestingUserID)
             throws SQLException {
+        // Determine how long the subject / content preview will be
         String contentNoHTML = content.replaceAll("\\<[^>]*>", "");
         int lenSubject = Math.min(subject.length(), PREVIEW);
         int lenContent = Math.min(contentNoHTML.length(), PREVIEW - lenSubject);
+
         boolean userIsReceiver = requestingUserID == to;
 
         StringBuilder html = new StringBuilder();
