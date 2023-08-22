@@ -71,7 +71,7 @@ public class QuizControlerServlet extends HttpServlet {
                 html += currQuiz.getNextHTML();
             }
             request.setAttribute("html", html);
-            forwardToJSP(request, response, "liveQuiz.jsp");
+            forwardToJSP(request, response, "quizLive.jsp");
         } else {
             session.setAttribute("quiz", null);
             request.setAttribute("quiz", currQuiz);
@@ -83,7 +83,7 @@ public class QuizControlerServlet extends HttpServlet {
         if (currQuiz.hasMoreHTML() ) {
             String html = currQuiz.getNextHTML();
             request.setAttribute("html", html);
-            forwardToJSP(request, response, "liveQuiz.jsp");
+            forwardToJSP(request, response, "quizLive.jsp");
         } else {
             session.setAttribute("quiz", null);
             request.setAttribute("quiz", currQuiz);
