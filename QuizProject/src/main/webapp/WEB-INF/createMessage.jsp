@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
-<%@ page import="main.java.model.Message, main.java.model.User"%>
+<%@ page import="model.Message, model.User"%>
 <!DOCTYPE html>
 <html>
 <%
