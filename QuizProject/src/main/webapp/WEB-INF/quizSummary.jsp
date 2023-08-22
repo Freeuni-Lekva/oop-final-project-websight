@@ -37,7 +37,6 @@
     ArrayList<String> tags       = quiz.getTags();
     String flagNote = (String) request.getAttribute("flagNote"); // if user just flagged quiz
 
-    // Figure out some user properties which toggle displays
     if (user == null || user.getUserID() == -1) { // guest
         userID   = -1;
         userType = "guest";
@@ -127,18 +126,13 @@
         return html.toString();
     }
 
-    /*
-     * Generates links pertaining to the quiz: Take quiz, flag quiz, or delete
-     * quiz, depending on userType. Also displays a flagNote and an option for
-     * taking the quiz in practice mode if supported
-     */
     public String getQuizLinks(String userType, Integer quizID, String quizName,
                                boolean supportsPracticeMode, String flagNote) {
         StringBuilder html = new StringBuilder();
         if ( userType.equals("guest") ) {
             html.append(
                     "<div class='col-md-3'>" +
-                            "<form action='QuizControllerServlet'>" +
+                            "<form action='quizControler'>" +
                             "<input type='hidden' name='quizID' value=" + quizID + " />" +
                             "<button class='disabled btn btn-primary btn-sm'>Login to take quiz</button>" +
                             "</form>" +
@@ -147,7 +141,7 @@
             if ( supportsPracticeMode ) { html.append(
                     "<div class='col-md-4'>" +
                             "<div class='input-group'>" +
-                            "<form action='QuizControllerServlet'>" +
+                            "<form action='quizControler'>" +
                             "<input type='hidden' name='quizID' value=" + quizID + " />" +
                             "<button class='btn btn-primary btn-sm' type='submit'>Take Quiz</button>" +
                             "<button class='btn btn-success btn-sm' name='practice'" +
@@ -155,7 +149,7 @@
                             "</form></div></div>");
             } else { html.append(
                     "<div class='col-md-3'>" +
-                            "<form action='QuizControllerServlet'>" +
+                            "<form action='quizControler'>" +
                             "<input type='hidden' name='quizID' value=" + quizID + " />" +
                             "<button class='btn btn-primary' type='submit'>Take Quiz</button>" +
                             "</form></div>");
@@ -163,7 +157,7 @@
         } if ( userType.equals("standard") ) {
             html.append(
                     "<div class='col-md-1 pull-left'>" +
-                            "<form action='FlagQuizServlet' method='POST'>" +
+                            "<form action='flagQuizServlet' method='POST'>" +
                             "<input type='hidden' name='quizID' value=" + quizID + " />" +
                             "<input type='hidden' name='quizName' value='" + quizName + "' />");
             if (flagNote != null) {
@@ -182,7 +176,7 @@
         } else if ( userType.equals("admin") ) {
             html.append(
                     "<div class='col-md-1  pull-left'>" +
-                            "<form action='DeleteQuizServlet' method='POST'>" +
+                            "<form action='deleteQuizServlet' method='POST'>" +
                             "<input type='hidden' name='quizID' value=" + quizID + " />" +
                             "<button class='btn btn-danger btn-sm' 'type='submit'>" +
                             "<span title='Delete quiz' class='glyphicon glyphicon-trash'></span> Delete" +
@@ -192,9 +186,6 @@
         return html.toString();
     }
 
-    /*
-     * Returns a dropdown menu for adding a rating, based on user information
-     */
     public String getRatingDropdown(String userType, int userID, int quizID, Integer userRating) {
         if ( userType.equals("guest") ) return ""; // guests cannot rate
 
@@ -283,7 +274,7 @@
                     <dt>average score</dt>
                     <dd>
                         <h3><span class="label label-primary">
-      							<%= score.format(avgScore) %> out of <%= quiz.getPossiblePoints() %>
+      							<%= score.format(avgScore) %> out of <%= quiz.getPossibleScore() %>
       						</span>
                         </h3><br>
                     </dd>

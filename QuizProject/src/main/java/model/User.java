@@ -9,6 +9,8 @@ public class User {
     private int ID;
     private String name;
     private int type;
+    private String password;
+
     DBConnection conn;
 
     public User() {
@@ -88,5 +90,14 @@ public class User {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", password='" + password + '\'' +
+                ", conn=" + conn +
+                '}';
+    }
 }

@@ -15,7 +15,7 @@ public class Answer {
         ResultSet rs = connection.getQuizAnswer(questionId);
         rs.last();
         numAnswers = rs.getRow();
-        rs.first();
+        rs.next();
 
         for (int i = 0; i < numAnswers; i++) {
             answers.add(rs.getString("answer"));

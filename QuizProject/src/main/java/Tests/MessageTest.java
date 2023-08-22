@@ -35,7 +35,7 @@ public class MessageTest {
         int type2 = message.getType();
         int to2 = message.getToUserID();
         int from2 = message.getFromUserID();
-        int messageID2 = message.getMessageID();
+        int messageID2 = message.getID();
         String subject2 = message.getSubject();
         String content2 = message.getContent();
         Date date2 = message.getDate();

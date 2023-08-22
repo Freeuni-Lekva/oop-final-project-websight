@@ -6,7 +6,7 @@
 <body>
     <h4>Here's the area where you're able to generate a new quiz.</h4>
     <h3>Let's initiate the process of crafting your quiz – kindly fill out the form below to commence.</h3>
-        <form action="QuizCreateServlet" method="post">
+        <form action="createServlet" method="post">
         <div class="form-group">
             <input name="origin" type="hidden" value="CreateQuiz" >
             <label for="quizName" class="col-sm-2 control-label">Quiz Name:</label>

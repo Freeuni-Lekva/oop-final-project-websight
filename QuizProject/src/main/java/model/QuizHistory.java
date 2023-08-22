@@ -15,7 +15,6 @@ public class QuizHistory {
     public static ArrayList<Standing> getStandingsByQuiz(int quizID, DBConnection connection) throws SQLException {
         ArrayList<Standing> result = new ArrayList<Standing>();
         ResultSet Standings = connection.getRatings(quizID);
-        Standings.beforeFirst();
         while(Standings.next()) {
             int userID = Standings.getInt("userID");
             int StandingValue = Standings.getInt("StandingValue");
@@ -28,8 +27,7 @@ public class QuizHistory {
 
     public static ArrayList<Standing> getStandingsByUser(int userID, DBConnection connection) throws SQLException {
         ArrayList<Standing> result = new ArrayList<Standing>();
-            ResultSet Standings = connection.getRatingsByUserID(userID);
-        Standings.beforeFirst();
+        ResultSet Standings = connection.getRatingsByUserID(userID);
         while(Standings.next()) {
             int quizID = Standings.getInt("quizID");
             int StandingValue = Standings.getInt("StandingValue");
@@ -42,7 +40,6 @@ public class QuizHistory {
     public static ArrayList<Score> getHistories(Integer userID, Integer quizID, DBConnection connection) throws SQLException {
         ArrayList<Score> result = new ArrayList<Score>();
         ResultSet histories = (userID == null) ? connection.getHistories(quizID) : connection.getHistoriesByUserID(userID);
-        histories.beforeFirst();
         while (histories.next()) {
             int currQuizID = histories.getInt("quizID");
             userID = histories.getInt("userID");
@@ -139,7 +136,6 @@ public class QuizHistory {
     public static ArrayList<CreationQuiz> getQuizzes(Integer userID, DBConnection connection) throws SQLException {
         ArrayList<CreationQuiz> result = new ArrayList<>();
         ResultSet quizzes = (userID == null) ? connection.getAllQuizzes() : connection.getQuizzesCreatedByUserIDFromDB(userID);
-        quizzes.beforeFirst();
         while (quizzes.next()) {
             int quizID = quizzes.getInt("quizID");
             userID = quizzes.getInt("quizCreatoruserID");
@@ -180,7 +176,6 @@ public class QuizHistory {
     public static ArrayList<String> getPopularQuizzes(DBConnection connection) throws SQLException {
         ArrayList<String> result = new ArrayList<String>();
         ResultSet allStandings = connection.getAllRatings();
-        allStandings.beforeFirst();
         HashMap<Integer, Integer> popQuizzes = new HashMap<Integer, Integer>();
         while(allStandings.next()) {
             int quizID = allStandings.getInt("quizID");
@@ -202,7 +197,7 @@ public class QuizHistory {
             if (i >= POP) break;
             int quizID = popList.get(i);
             ResultSet quizInfo = connection.getQuizInfo(quizID);
-            quizInfo.first();
+            quizInfo.next();
             String format =
                     "<td><a class='btn btn-primary btn-xs' href='quizSummary.jsp?quizID=" +
                             quizInfo.getInt("quizID") + "'>" + quizInfo.getString("quizName") + "</a></td>" +
@@ -217,7 +212,6 @@ public class QuizHistory {
     public static ArrayList<String> getCategories(int quizID, DBConnection connection) throws SQLException {
         ArrayList<String> result = new ArrayList<String>();
         ResultSet categories = connection.getCategories(quizID);
-        categories.beforeFirst();
         while (categories.next()) {
             result.add(categories.getString("categoryName"));
         }
@@ -226,7 +220,6 @@ public class QuizHistory {
     public static ArrayList<String> getTags(int quizID, DBConnection connection) throws SQLException {
         ArrayList<String> result = new ArrayList<String>();
         ResultSet tags = connection.getTags(quizID);
-        tags.beforeFirst();
         while(tags.next()) {
             result.add(tags.getString("tagName"));
         }
@@ -236,7 +229,6 @@ public class QuizHistory {
         int numValues = 0;
         int total = 0;
         ResultSet Standings = connection.getRatings(quizID);
-        Standings.beforeFirst();
         while (Standings.next()) {
             total += Standings.getInt("StandingValue");
             numValues++;

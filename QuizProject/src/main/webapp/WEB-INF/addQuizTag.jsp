@@ -39,7 +39,6 @@
                                     <option value="-1" selected>Select A Tag</option>
                                     <%
                                         ResultSet rs = dbConnection.getTagTypes();
-                                        rs.beforeFirst();
                                         while(rs.next()) {
                                             out.println("<option value=\"" + rs.getInt("tagID") + "\">" + rs.getString("tagName") + "</option>");
                                         }

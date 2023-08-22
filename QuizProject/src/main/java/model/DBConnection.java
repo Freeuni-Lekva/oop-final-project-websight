@@ -17,20 +17,19 @@ public class DBConnection {
     private String answers_table = "answers";
     private String messages_table = "messages";
     private String friends_table = "friends";
-    private String user_achievements_table = "achievements";
+    private String user_achievements_table = "user_achievements";
     private String user_types_table = "userTypes";
     private String user_ratings_table = "ratings";
     private String tags_table = "tags";
     private String quiz_history_table = "history";
     private String quiz_tags_table = "quizTags";
     private String categories_table = "categories";
-    private String quiz_categories_table = "quizCategories";
+    private String quiz_categories_table = "quizcategories";
 
 
     private Connection connection;
 
     public DBConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
 
         connection = DriverManager.getConnection("jdbc:mysql://localhost:" + database_port+"/"+database_name+"?characterEncoding=UTF8&user="+username+"&password="+password);
         PreparedStatement statement = connection.prepareStatement("USE " + database_name);
@@ -60,7 +59,7 @@ public class DBConnection {
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setString(1, userName);
         ResultSet rs = statement.executeQuery();
-        rs.first();
+        rs.next();
         return rs.getInt(1);
     }
 
@@ -69,7 +68,7 @@ public class DBConnection {
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setInt(1, userID);
         ResultSet rs = statement.executeQuery();
-        rs.first();
+        rs.next();
         return rs.getString(1);
     }
 
@@ -78,14 +77,14 @@ public class DBConnection {
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setString(1, userName);
         ResultSet rs = statement.executeQuery();
-        rs.first();
+        rs.next();
         int userID = rs.getInt(1);
 
         String passStr = "SELECT password FROM users WHERE userID = ?";
         statement = connection.prepareStatement(passStr);
         statement.setInt(1, userID);
         rs = statement.executeQuery();
-        if (!rs.first())
+        if (!rs.next())
             return "";
         return rs.getString(1);
     }
@@ -95,7 +94,7 @@ public class DBConnection {
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setInt(1, userID);
         ResultSet rs = statement.executeQuery();
-        rs.first();
+        rs.next();
         return rs.getInt(1);
     }
 
@@ -118,12 +117,11 @@ public class DBConnection {
     }
 
     public boolean validUserName(String userName) throws SQLException {
-        String str = "SELECT COUNT(*) FROM " + users_table + " WHERE userName = ?";
+        String str = "SELECT * FROM " + users_table + " WHERE userName = ?";
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setString(1, userName);
         ResultSet rs = statement.executeQuery();
-        rs.first();
-        return rs.getInt(1) > 0;
+        return rs.next();
     }
 
     public ResultSet searchUser(String userName) throws SQLException {
@@ -143,12 +141,11 @@ public class DBConnection {
     }
 
     public boolean nameInUse(String userName) throws SQLException {
-        String str = "SELECT COUNT(*) from " + users_table + " WHERE LOWER(userName) LIKE LOWER(?)";
+        String str = "SELECT * from " + users_table + " WHERE LOWER(userName) LIKE LOWER(?)";
         PreparedStatement statement = connection.prepareStatement(str);
         statement.setString(1, userName);
         ResultSet rs = statement.executeQuery();
-        rs.first();
-        return rs.getInt(1) > 0;
+        return rs.next();
     }
 
     public boolean friendship(int userID1, int userID2) throws SQLException {
@@ -179,8 +176,8 @@ public class DBConnection {
         friend2.setInt(1, userID2);
         ResultSet rs1 = friend1.executeQuery();
         ResultSet rs2 = friend2.executeQuery();
-        rs1.first();
-        rs2.first();
+        rs1.next();
+        rs2.next();
         return (rs1.getInt(1) + rs2.getInt(1)) == 2;
     }
 
@@ -230,12 +227,11 @@ public class DBConnection {
         return sql.execute();
     }
     public boolean validQuizName(String quizName) throws SQLException {
-        String quizNameGet = "SELECT COUNT(*) FROM " + quizzes_table + " WHERE quizName = ?";
+        String quizNameGet = "SELECT * FROM " + quizzes_table + " WHERE quizName = ?";
         PreparedStatement sql = connection.prepareStatement(quizNameGet);
         sql.setString(1, quizName);
         ResultSet rs = sql.executeQuery();
-        rs.first();
-        return rs.getInt(1) > 0;
+        return rs.next();
     }
 
     public int getQuizID(String quizName) throws SQLException {
@@ -243,7 +239,6 @@ public class DBConnection {
         PreparedStatement sql = connection.prepareStatement(userIDGet);
         sql.setString(1, quizName);
         ResultSet rs = sql.executeQuery();
-        rs.first();
         return rs.getInt(1);
     }
     public ResultSet getAnswerByQuestionIDFromDB(int questionId) throws SQLException {
@@ -299,7 +294,7 @@ public class DBConnection {
         }
 
         resultSet = statement.getGeneratedKeys();
-        if (!resultSet.first())
+        if (!resultSet.next())
             throw new SQLException("The effort to add the quiz was not successful, as no generation key was acquired.");
 
         quiz.setQuizID(resultSet.getInt(1)); //Add the quizID to this new quiz that we have
@@ -307,7 +302,7 @@ public class DBConnection {
     }
 
     public int addQuestionToDB(String questionText, int qType,
-                           int nextQuestionNum, int quizID) throws SQLException {
+                               int nextQuestionNum, int quizID) throws SQLException {
         String insert = "insert into " + questions_table + " (quizID, questionTypeID, question, questionNumber) VALUES (?, ?, ?, ?);";
         PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, quizID);
@@ -320,7 +315,7 @@ public class DBConnection {
         }
 
         ResultSet genKey = statement.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
     }
@@ -336,7 +331,7 @@ public class DBConnection {
             throw new SQLException("Adding answer failed, no rows affected.");
 
         genKey = statement.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("The attempt to add an answer was unsuccessful, as no generation key was acquired.");
         return genKey.getInt(1);
     }
@@ -390,7 +385,7 @@ public class DBConnection {
         PreparedStatement sql = connection.prepareStatement(passwordGet);
         sql.setInt(1, userID);
         ResultSet rs = sql.executeQuery();
-        if (!rs.first())
+        if (!rs.next())
             return "";
         return rs.getString(1);
     }
@@ -503,7 +498,7 @@ public class DBConnection {
         }
 
         genKey = sql.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return true;
     }
@@ -519,7 +514,7 @@ public class DBConnection {
         }
 
         ResultSet genKey = sql.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return true;
     }
@@ -533,7 +528,7 @@ public class DBConnection {
         } //if
 
         ResultSet genKey = sql.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return genKey.getInt(1);
     }
@@ -563,7 +558,7 @@ public class DBConnection {
         PreparedStatement sql = connection.prepareStatement(userIDGet);
         sql.setInt(1, quizID);
         ResultSet rs = sql.executeQuery();
-        rs.first();
+        rs.next();
         return rs.getString(1);
     }
     public ResultSet searchForQuiz(String quizFilter, String tagFilter, String catFilter) throws SQLException {
@@ -643,7 +638,7 @@ public class DBConnection {
         }
 
         ResultSet genKey = sql.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("Creating achievement failed, no gen key obtained.");
         return true;
     }
@@ -706,8 +701,7 @@ public class DBConnection {
         PreparedStatement sql = connection.prepareStatement(select);
         sql.setString(1, cookieIn);
         ResultSet userRow = sql.executeQuery();
-        if (!userRow.first()) {
-
+        if (!userRow.next()) {
             return -1;
         }
         return userRow.getInt("userID");
@@ -725,7 +719,7 @@ public class DBConnection {
         }
 
         genKey = sql.getGeneratedKeys();
-        if (!genKey.first())
+        if (!genKey.next())
             throw new SQLException("Creating user failed, no gen key obtained.");
         int userID = genKey.getInt(1);
 

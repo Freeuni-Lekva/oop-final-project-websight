@@ -12,7 +12,7 @@
         <h2 style="color:#428bca">Please write your question</h2>
         <h4>To create a question, kindly provide both the question itself and its corresponding answer.</h4>
         <h5 style="color:#d9534f">Please note that you won't have the ability to revise these later.</h5>
-        <form class="form-horizontal" role="form" action="QuizCreateServlet" method="post">
+        <form class="form-horizontal" role="form" action="createServlet" method="post">
             <input name="origin" type="hidden"
                    value="CreateQuestionQR" >
             <div class="form-group">

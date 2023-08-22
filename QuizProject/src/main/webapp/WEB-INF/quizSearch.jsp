@@ -11,9 +11,9 @@
 <div class="container">
     <div class="jumbotron">
         <%
-            if ( (String) request.getAttribute("alert") != null) {
+            if (request.getAttribute("alert") != null) {
                 out.println("<h2 style='color:#d9534f'>" +
-                        (String) request.getAttribute("alert") + "</h2><br>");
+                        request.getAttribute("alert") + "</h2><br>");
             }
         %>
         <h2 style="color:#428bca">Search for available quizes here!</h2>
@@ -37,7 +37,6 @@
                                     <%
                                         DBConnection dbConnection = (DBConnection) application.getAttribute("DBConnection");
                                         ResultSet rs = dbConnection.getCategoryTypes();
-                                        rs.beforeFirst();
                                         while(rs.next()) {
                                             out.println("<option value=\"" + rs.getInt("categoryID") + "\">" + rs.getString("categoryName") + "</option>");
                                         }

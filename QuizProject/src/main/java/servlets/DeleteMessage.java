@@ -31,7 +31,7 @@ public class DeleteMessage extends HttpServlet {
             Integer userID = ((User) session.getAttribute("user")).getUserID();
             Integer messageID = Integer.parseInt(req.getParameter("messageID"));
             ResultSet results = conn.getMessage(messageID);
-            results.first();
+            results.next();
             Integer toUserID = (Integer) results.getObject("toUserID");
             Integer fromUserID = (Integer) results.getObject("fromUserID");
             Boolean fromUserDeleted = (Boolean) results.getObject("fromUserDeleted");

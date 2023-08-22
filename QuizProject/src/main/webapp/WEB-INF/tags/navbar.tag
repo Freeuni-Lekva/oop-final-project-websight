@@ -2,7 +2,7 @@
 <%@ attribute name="session" type="javax.servlet.http.HttpSession"
 	rtexprvalue="true" required="true" %>
 <%@ attribute name="activeTab" rtexprvalue="true" required="true" %>
-<%@ tag import="main.java.model.User" %>
+<%@ tag import="model.User" %>
 <%
 	String userName = "Guest";
 	Integer userID  = -1;

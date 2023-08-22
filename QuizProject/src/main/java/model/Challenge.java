@@ -52,7 +52,7 @@ public class Challenge extends Message {
         StringBuilder html = new StringBuilder();
 
         html.append("<input name='fromUserID' type='hidden' value=" + userID + " />");
-        html.append("<input name='type' type='hidden' value=" + Message.CHALLENGE + " />");
+        html.append("<input name='type' type='hidden' value=" + CHALLENGE + " />");
         html.append("<input name='hasContent' type='hidden' value='true' />");
 
         html.append(
