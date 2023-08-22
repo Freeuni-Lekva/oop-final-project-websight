@@ -1,4 +1,4 @@
-package model.Answer;
+package model.AnswerPackage;
 
 import model.DBConnection;
 import java.sql.*;

@@ -1,10 +1,9 @@
-package model.Question;
+package model.QuestionPackage;
 
-import model.Answer.QRAnswer;
+import model.AnswerPackage.QRAnswer;
 import model.DBConnection;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class QRQuestion extends Question{
 

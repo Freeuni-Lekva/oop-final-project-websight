@@ -1,7 +1,7 @@
-package model.Question;
+package model.QuestionPackage;
 
 import model.DBConnection;
-import model.Answer.Answer;
+import model.AnswerPackage.Answer;
 import java.sql.*;
 import java.util.ArrayList;
 

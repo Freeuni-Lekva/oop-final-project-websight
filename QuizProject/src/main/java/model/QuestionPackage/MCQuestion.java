@@ -1,6 +1,6 @@
-package model.Question;
+package model.QuestionPackage;
 
-import model.Answer.MCAnswer;
+import model.AnswerPackage.MCAnswer;
 import model.DBConnection;
 
 import java.sql.SQLException;
