@@ -25,7 +25,6 @@
 			Map<Integer, String> quizMap = new HashMap<Integer, String>();
 			session.setAttribute("quiz", null);
 			try {
-				quizzes.beforeFirst();
 				while (quizzes.next()) {
 					String quizName = quizzes.getString("quizName");
 					int quizId = quizzes.getInt("quizID");
@@ -38,7 +37,9 @@
 			for (Integer quizId : quizMap.keySet()) {
 				out.println("<li>");
 				out.println("<input name='quizId' type='hidden' value='" + quizId + "'/>");
-				out.println("<a href='QuizControllerServlet?id=" + quizId + "' >" + quizMap.get(quizId) + "</a>");
+				out.println("<a href='quizCo" +
+                                                out.println("<a href='QuizControllerServlet?id=" + quizId + "' >" + quizMap.get(quizId) + "</a>");
+                                                                "ntroler?id=" + quizId + "' >" + quizMap.get(quizId) + "</a>");
 				out.println("</li>");
 			}
 
