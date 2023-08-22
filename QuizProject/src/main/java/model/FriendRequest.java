@@ -5,46 +5,43 @@ import java.util.InputMismatchException;
 import java.sql.SQLException;
 
 public class FriendRequest extends Message {
-    public FriendRequest(int from, int toUserID, String fromName) {
-        super(FRIEND, toUserID, from);
-        setSubject("Someone wants to be your friend!");
-        setContent( generateFriendContent(from, fromName) +
-                getAcceptButton(from) );
+    public FriendRequest(int from, int to, String fromName) {
+        super(FRIEND, to, from);
+        setSubject("You have a friend request!");
+        setContent(FContent(from, fromName) + getAccept(from) );
     }
 
-    public static void makeFriendRequest(HttpServletRequest request, DBConnection connection) throws SQLException, InputMismatchException {
-        String toUserName   = request.getParameter("toUserName");
-        if ( !(connection.validUserName(toUserName)) ) throw new InputMismatchException();
-        Integer to    = connection.getUserID( toUserName );
-        Integer from  = Integer.parseInt(request.getParameter("fromUserID"));
-        String fromName = connection.getUserName( from );
-        FriendRequest req = new FriendRequest(from, to, fromName);
-        connection.addMessage(req);
+    public static void friendRequest(HttpServletRequest req, DBConnection con) throws SQLException, InputMismatchException {
+        String toUserName = req.getParameter("toUserName");
+        if (!(con.validUserName(toUserName)) ) throw new InputMismatchException();
+        int from  = Integer.parseInt(req.getParameter("fromUserID"));
+        int to = con.getUserID(toUserName);
+        String fromName = con.getUserName(from);
+        FriendRequest res = new FriendRequest(from, to, fromName);
+        con.addMessage(res);
     }
 
-    private static String
-    generateFriendContent(Integer from, String fromName) {
-        String res =
-                "<h4>" + fromName + " wants to be your friend!</h4>" +
-                        "User <a class='btn btn-default btn-xs' href='userPage.jsp?userID=" +
-                        from + "'>" + fromName + "</a> has requested to be your " +
-                        "friend! Check out their page or click below to accept the request<br><br>";
+    private static String FContent(Integer from, String fromName) {
+        String res =    "<h4>" + fromName + " sent you a friend request!</h4>" +
+                "User <a class='btn btn-default btn-xs' href='userpage.jsp?userID=" +
+                from + "'>" + fromName + "</a> wants to be your " +
+                "friend! Accept the request or check their profile <br><br>";
         return res;
     }
 
-    private static String getAcceptButton(Integer fromUserID) {
+    private static String getAccept(Integer from) {
         return "<form action='FriendRequestServlet' method='POST'>" +
-                "<input name='nonActingUserID' value=" + fromUserID + " type='hidden' />" +
+                "<input name='nonActingUserID' value=" + from + " type='hidden' />" +
                 "<input name='origin' value='messageLink' type='hidden' />" +
                 "<input class='btn btn-default' type='submit' value='Accept' /><br>" +
                 "</form>";
     }
-    public static String getCreationHTML(Integer userID, DBConnection connection)
+    public static String getCreationHTML(Integer UID, DBConnection con)
             throws SQLException {
-        String userName = connection.getUserName(userID);
+        String userName = con.getUserName(UID);
         StringBuilder html = new StringBuilder();
 
-        html.append("<input name='fromUserID' type='hidden' value=" + userID + " />");
+        html.append("<input name='fromUserID' type='hidden' value=" + UID + " />");
         html.append("<input name='type' type='hidden' value=" + Message.FRIEND + " />");
         html.append("<input name='hasContent' type='hidden' value='true' />");
         html.append(
@@ -62,7 +59,7 @@ public class FriendRequest extends Message {
                         "<div class='col-sm-7'>" +
                         "<div class='panel panel-default'>" +
                         "<div class='panel-body' >" +
-                        generateFriendContent(userID, userName) +
+                        FContent(UID, userName) +
                         "<a class='disabled btn btn-default'>Accept</a><br>" +
                         "</div>" +
                         "</div>" +
