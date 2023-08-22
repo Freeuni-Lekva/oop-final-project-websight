@@ -4,10 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="./css/bootstrap.css" rel="stylesheet">
-    <script type="text/javascript" src="./js/jquery.js"></script>
-    <script type="text/javascript" src="./js/bootstrap.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Create a new Picture Response Question!</title>
 </head>
 <body>
