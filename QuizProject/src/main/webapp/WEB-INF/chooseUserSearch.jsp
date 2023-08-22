@@ -29,7 +29,6 @@
                         ResultSet users = dbConnection.searchUser(userFilter);
                         Map<Integer, String> userMap = new HashMap<Integer, String>();
                         try {
-                            users.beforeFirst();
                             while (users.next()) {
                                 String userName = users.getString("userName");
                                 int userId = users.getInt("userID");
