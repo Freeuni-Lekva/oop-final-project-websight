@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Quiz {
 
@@ -272,6 +273,22 @@ public class Quiz {
             total += q.possiblePoints();
         }
         return total;
+    }
+
+    public String getResult(int userID) throws SQLException{
+
+        if (!connection.addQuizHistory(quizID, userID, score)) throw new SQLException();
+
+        String result = "<h3 style='color:#d9534f'> You scored " + score + " out of a possible " + possibleScore + " points.</h3>";
+        long end = System.currentTimeMillis();
+        long elapsed = end - startTime;
+        long hours = TimeUnit.MILLISECONDS.toHours(elapsed);
+        long minutes =  TimeUnit.MILLISECONDS.toMinutes(elapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(elapsed));
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(elapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(elapsed));
+        String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+        result += "<h3 style='color:#d9534f'> You took " + time + " to complete the quiz.</h3>";
+        return result;
     }
 
     public ArrayList<Question> getAllQuestions() {
