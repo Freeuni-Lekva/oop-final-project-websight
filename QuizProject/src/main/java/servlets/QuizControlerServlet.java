@@ -75,7 +75,7 @@ public class QuizControlerServlet extends HttpServlet {
         } else {
             session.setAttribute("quiz", null);
             request.setAttribute("quiz", currQuiz);
-            forwardToJSP(request, response, "quizResults.jsp");
+            forwardToJSP(request, response, "quizResult.jsp");
         }
     }
 

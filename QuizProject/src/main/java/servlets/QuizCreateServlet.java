@@ -95,7 +95,7 @@ public class QuizCreateServlet extends HttpServlet {
                 return;
             }
             request.setAttribute("alert", "Your quiz " + quizName + " was created successfully!");
-            forwardToJSP(request, response, "searchQuiz.jsp");
+            forwardToJSP(request, response, "quizSearch.jsp");
         }
     }
 
