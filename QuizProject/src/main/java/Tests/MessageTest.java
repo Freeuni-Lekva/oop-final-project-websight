@@ -1,12 +1,8 @@
 package Tests;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import model.CreationQuiz;
 import model.Message;
-import model.Quiz;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Date;
 
 public class MessageTest {
