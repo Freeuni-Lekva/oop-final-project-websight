@@ -13,7 +13,7 @@
 <body>
 
 <div class="container">
-<h1>Choose a Quiz to try:</h1>
+<h1>Choose a Quiz:</h1>
 <p></p>
 <p>Quizzes: </p>
 <p></p>
