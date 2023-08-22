@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <%@ taglib  prefix="tag" tagdir="/WEB-INF/tags" %>
-<%@ page import="main.java.*,java.util.*,java.sql.*" %>
+<%@ page import="model.*,java.util.*,java.sql.*" %>
 <%
 	ArrayList<Message> messages;
 	DBConnection connection;
@@ -95,22 +95,22 @@
 		   				</a>
 					    <ul class="dropdown-menu">
 					    	<li>
-					    	<%= "<a href=\"NewMessageServlet?type=" + Message.TYPE_NOTE + "\">" %>
+					    	<%= "<a href=\"NewMessageServlet?type=" + Message.NOTE + "\">" %>
 					    		Note</a>
 					    	</li>
 					    	<li>
-					    	<%= "<a href=\"NewMessageServlet?type=" + Message.TYPE_FRIEND + "\">" %>
+					    	<%= "<a href=\"NewMessageServlet?type=" + Message.FRIEND + "\">" %>
 					    		FriendRequest</a>
 					    	</li>
 					    	<li>
-					    	<%= "<a href=\"NewMessageServlet?type=" + Message.TYPE_CHALLENGE + "\">" %>
+					    	<%= "<a href=\"NewMessageServlet?type=" + Message.CHALLENGE + "\">" %>
 					    		Quiz challenge</a>
 					    	</li>
 					    	<%
 					    		if ( user != null & user.getUserID() != -1 & user.isAdmin() ) {
 					    			out.println(
 					    			"<li role=\"presentation\" class=\"divider\"></li>" +
-					    			"<li><a href=\"NewMessageServlet?type=" + Message.TYPE_ANNOUNCEMENT +
+					    			"<li><a href=\"NewMessageServlet?type=" + Message.ANNOUNCEMENT +
 					    			"\">Announcement</a></li>"
 					    			);
 					    		}
@@ -132,7 +132,7 @@
 					<tbody>
 					<%
 					for (int idx=0; idx < messages.size(); idx++) {
-						out.println( messages.get(idx).displayAsTableRow(connection, idx, userID) );
+						out.println( messages.get(idx).displayRow(connection, idx, userID) );
 					}
 					%>
 					</tbody>

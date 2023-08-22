@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="main.java.*" %>
+<%@ page import="model.*" %>
 <%
 	Message message = (Message) request.getAttribute("message");
 	DBConnection dbConnection = (DBConnection) application.getAttribute("DBConnection");
@@ -15,7 +15,7 @@
 <body>
 	<div class="container">
 	  <br>
-	    <%= message.displayAsHTML(dbConnection) %>
+	    <%= message.display(dbConnection) %>
 	  <br>
 	</div>
 </body>
